@@ -1,7 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="java.util.*"  import="java.sql.*" 
+		import="org.apache.commons.lang3.StringUtils"%>
 <%
 String actionUrl;
+
+// DB 접속을 위한 준비
+Connection conn = null;
+PreparedStatement stmt = null;
+ResultSet rs = null;
+
+String dbUrl = "jdbc:mysql://localhost:3306/web2014";
+String dbUser = "web";
+String dbPassword = "asdf";
 
 //사용자 정보를 위한 변수 초기화
 String userid = "";
