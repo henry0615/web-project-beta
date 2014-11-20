@@ -28,6 +28,8 @@
 		errorMsgs.add("비밀번호는 6자 이상 입력해주세요.");
 	} 
 	
+	
+	
 	if (name == null || name.trim().length() == 0) {
 		errorMsgs.add("이름을 반드시 입력해주세요.");
 	}
