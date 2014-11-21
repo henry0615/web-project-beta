@@ -11,7 +11,6 @@
 <li><a class= "menu" href= "search.jsp">Search</a></li>
 <li><a class= "menu" href= "#">로그인</a></li>
 <li><a class= "menu" href= "signup.jsp">회원가입</a></li>
-<li>
 </ul>
 </div>
 </div>

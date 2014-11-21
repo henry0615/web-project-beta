@@ -13,8 +13,8 @@
 	
 	request.setCharacterEncoding("utf-8");
 	String userid = request.getParameter("userid");
-	String pwd = request.getParameter("pwd");
 	String name = request.getParameter("name");
+	String pwd = request.getParameter("pwd");
 	String email = request.getParameter("email");
 	
 	List<String> errorMsgs = new ArrayList<String>();
@@ -23,17 +23,12 @@
 	if (userid == null || userid.trim().length() == 0) {
 		errorMsgs.add("ID를 반드시 입력해주세요.");
 	}
-	
-	if (pwd == null || pwd.length() < 6) {
-		errorMsgs.add("비밀번호는 6자 이상 입력해주세요.");
-	} 
-	
-	
-	
 	if (name == null || name.trim().length() == 0) {
 		errorMsgs.add("이름을 반드시 입력해주세요.");
 	}
-	
+	if (pwd == null || pwd.length() < 6) {
+		errorMsgs.add("비밀번호는 6자 이상 입력해주세요.");
+	} 
 	if (email == null || email.trim().length() == 0) {
 		errorMsgs.add("이메일을 반드시 입력해주세요.");
 	}
