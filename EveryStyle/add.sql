@@ -1,8 +1,3 @@
-
-CREATE DATABASE signup DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-
-GRANT ALL ON signup.* TO 'web'@'localhost' IDENTIFIED BY 'asdf';
-
 use signup;
 
 
