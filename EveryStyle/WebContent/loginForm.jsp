@@ -24,21 +24,21 @@ String actionUrl = "loginCheck.jsp";
 		<legend class="legend">로그인</legend>
 		
 		<div class="form-group">
-		<label class="form-label" for="userid">ID: </label>
+		<label class="form-label" for="userid" >ID: </label>
 		<div class="controls">
-		<input type="text" name="userid">
+		<input type="text" name="userid" placeholder="ID">
 		</div>
 		</div>
 		
 		<div class="form-group">
-		<label class="form-label" for="userid">Password: </label>
+		<label class="form-label" for="userid" >Password: </label>
 		<div class="controls">
-		<input type="password" name="pwd">
+		<input type="password" name="pwd" placeholder="Password">
 		</div>
 		</div>
 		
 		<div class="form-actions">
-		<input type="submit" value="login">
+		<input type="submit" class="btn btn-success" value="로그인">
 		</div>
 		</fieldset>
 	</form>
