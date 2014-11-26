@@ -76,7 +76,7 @@ if (id > 0) {
 	<jsp:include page="share/header.jsp"/>
 	
 	<div class="container">
-	<form class="signupform" action="<%=actionUrl%>" method="post">
+	<form role="form" action="<%=actionUrl%>" method="post">
 	<fieldset>
 	<legend class="legend">회원가입</legend>
 		<%
@@ -86,36 +86,28 @@ if (id > 0) {
 		%>
 	
 	<div class="form-group">
-	<label class="form-label" for="userid">ID</label>
-	<div class="controls">
-	<input type="text" class="form-control" name="userid" value="<%=userid%>">
-	</div>
+	<label for="userid">ID</label>
+	<input type="text" class="form-control" name="userid" placeholder="ID" value="<%=userid%>">
 	</div>
 	
 
-	<div class="control-group">
-	<label class="control-label" for="name">Name</label>
-	<div class="controls">
-	<input type="text" class="form-control" name="name" value="<%=name %>">
-	</div>
+	<div class="form-group">
+	<label for="name">Name</label>
+	<input type="text" class="form-control" name="name" placeholder="Name" value="<%=name %>">
 	</div>
 	
 		<% if (id <= 0) { %>
 					<%-- 신규 가입일 때만 비밀번호 입력창을 나타냄 --%>
 					<div class="form-group ">
-						<label class="controls" for="pwd">Password</label>
-						<div class="controls">
-							<input type="password" class="form-control" name="pwd">
-					</div>
+						<label class="form-label" for="pwd">Password</label>
+						<input type="password" class="form-control" placeholder="Password" name="pwd">
 					</div>
 	
 	<% } %>
 	
 	<div class="control-group">
-	<label class="control-label" for="email">E-mail</label>
-	<div class="controls">
-	<input type="text" class="form-control" name="email" value="<%=email %>">
-	</div>
+	<label for="email">E-mail</label>
+	<input type="text" class="form-control" name="email" placeholder="Email Address" value="<%=email %>">
 	</div>
 	
 	<div class="form-actions">
@@ -123,12 +115,12 @@ if (id > 0) {
 	<%if (id <= 0) { %>
 	<input type="submit" class="btn btn-primary" value="가입">
 	<%} else {%>
-	<input type="submit" class="btn btn-primary" value="수정">
+	<input type="submit" class="btn btn-default" value="수정">
 	<%} %>
 	</div>
 	</fieldset>
 	</form>
 	</div>
-	
+	<jsp:include page="share/footer.jsp" />
 </body>
 </html>

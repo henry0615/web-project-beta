@@ -30,7 +30,7 @@ String currentMenu = request.getParameter("current");
 		
 		<ul class="nav nav-tabs">
 		<li class="active"><a href="index.jsp">Coordination</a></li>
-		<li><a href="add.jsp">Add</a></li>
+		<li><a href="adds.jsp">Add</a></li>
 		<li><a href="search.jsp">Search</a></li>
 		<li><a href="#">Create</a></li>
 		</ul>

@@ -15,7 +15,7 @@
 	PreparedStatement stmt = null;
 	ResultSet rs = null;
 	
-	String dbUrl = "jdbc:mysql://localhost:3306/wp2014";
+	String dbUrl = "jdbc:mysql://localhost:3306/signup";
 	String dbUser = "web";
 	String dbPassword = "asdf";
 	
@@ -111,8 +111,6 @@
 			  	}
 			  	%>			
 
-				\
-				
 				<div class="form-group ">
 					<label class="col-sm-2 control-label">Kind</label>
 					<% for(String wear_kindName : wear_kinds) { %> 
