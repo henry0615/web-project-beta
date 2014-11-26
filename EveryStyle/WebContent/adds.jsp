@@ -53,7 +53,7 @@
              rs = stmt.executeQuery();
             
             if (rs.next()) {
-               userid = rs.getString("userid");
+               userid = session.getAttribute("userid").toString();
                image = rs.getString("image");
                link = rs.getString("link");
                clothes = rs.getString("clothes");
@@ -113,10 +113,10 @@
             <div class="control-group">
                <label class="control-label" for="userid">ID</label>
                <div class="controls">
-                  <%out.println(session.getAttribute("userid"));%>
+                  <input id="disabledInput" type="text" placeholder="<%out.println(session.getAttribute("userid")); %>" disabled>
                </div>
             </div>
-
+            
             <div class="control-group">
                <label class="control-label" for="image">Image</label>
                <div class="controls">

@@ -19,12 +19,12 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "C:/Users/lg/web_p/web-project-beta/EveryStyle/WebContent/uploadImg\\";
+   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg\\";
    MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
    
-   String userid = multi.getParameter("userid");
+   String userid = session.getAttribute("userid").toString();
    String link = multi.getParameter("link");
    String clothes = multi.getParameter("clothes");
    String price = multi.getParameter("price");
@@ -41,7 +41,7 @@
             "VALUES(?, ?, ?, ?, ?, ?)"
             );
       //고칠 것!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      stmt.setString(1,  "kim");
+      stmt.setString(1,  userid);
       // stmt.setString(2, fin.toString()); 
       stmt.setBinaryStream(2, fileInputStream, (int)(file.length()));
       stmt.setString(3,  link);
@@ -77,68 +77,15 @@
    Part filePart = request.getPart("image");
    inputStream = filePart.getInputStream(); */
    
-   
-   
-   
-   
-   ///////////
-   
-/*     if (image == null || image.length() == 0) {
-      errorMsgs.add("이미지를 반드시 등록해주세요.");
-   }  */
-    
-   /*  if (link == null || link.trim().length() == 0) {
+ 
+  if (link == null || link.trim().length() == 0) {
       errorMsgs.add("링크을 반드시 등록해주세요.");
    }
    
    if (clothes == null || clothes.length() == 0) {
       errorMsgs.add("옷에 적합하지 않은 값이 입력되었습니다.");
    }
-    */
-    /////////
-    /*
-   if (errorMsgs.size() == 0) {
-      
-      try {
-         
-         List fileItems = upload.parseRequest(request);
-         Iterator itr = fileItems.iterator();
-         FileInputStream fin = null;
-          while (itr.hasNext()) {
-                 FileItem item = (FileItem) itr.next();
-                  String domainName = item.getName();
-                  File savedFile = new File("C:/Users/lg/web_p/web-project-beta/EveryStyle/WebContent/"+"uploadImg\\"+domainName);
-                    // fin = new FileInputStream(savedFile); 
-                    item.write(savedFile);
-            }
-         
-         conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-         stmt = conn.prepareStatement(
-               "INSERT INTO adds(userid, image, link, clothes, price, season ) " +
-               "VALUES(?, ?, ?, ?, ?, ?)"
-               );
-         stmt.setString(1,  userid);
-         // stmt.setString(2, fin.toString()); 
-         stmt.setString(2, "test");
-         stmt.setString(3,  link);
-         stmt.setString(4,  clothes);
-         stmt.setString(5,  price);
-         stmt.setString(6,  seasonStr);
-         
-         result = stmt.executeUpdate();
-         if (result != 1) {
-            errorMsgs.add("등록에 실패하였습니다.");
-         }
-      } catch (SQLException e) {
-         errorMsgs.add("SQL 에러: " + e.getMessage());
-      } finally {
-         // 무슨 일이 있어도 리소스를 제대로 종료
-         if (rs != null) try{rs.close();} catch(SQLException e) {}
-         if (stmt != null) try{stmt.close();} catch(SQLException e) {}
-         if (conn != null) try{conn.close();} catch(SQLException e) {}
-      }
-   }
-    */
+ 
 %>
 <!DOCTYPE html>
 <html>
@@ -154,7 +101,6 @@
    <jsp:include page="share/header.jsp">
       <jsp:param name="current" value="Add" />
    </jsp:include>
-   <!-- <img src="C:/Users/lg/web_p/web-project-beta/EveryStyle/WebContent/uploadImg/Penguis.jpg"></img> -->
    
    <div class="container">
       <% if (errorMsgs.size() > 0) { %>
@@ -171,10 +117,11 @@
       </div>
       <% } else if (result == 1) { %>
       <div class="alert alert-success">
-      <!-- <b>userid</b>님 등록해주셔서 감사합니다. -->   
+      <b><%session.getAttribute("userid"); %></b>님 등록해주셔서 감사합니다.   
       </div>
+      
       <div class="form-action">
-         <a href="index.jsp" class="btn">목록으로</a>
+         <a href="addshow.jsp" class="btn">글 확인하기</a>
       </div>
 
       <%}%>
