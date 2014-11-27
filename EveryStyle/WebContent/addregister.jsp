@@ -19,7 +19,7 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg/";
+   String path = "C:/Users/lg/web/web-project-beta/EveryStyle/WebContent/uploadImg/";
    MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
@@ -34,6 +34,7 @@
    File NewFile = new File(path + realFileName);
    file.renameTo(NewFile);
    
+   String clothesName = multi.getParameter("clothesName");
    String link = multi.getParameter("link");
    String clothes = multi.getParameter("clothes");
    String price = multi.getParameter("price");
@@ -49,19 +50,19 @@
       Class.forName("com.mysql.jdbc.Driver");
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
       stmt = conn.prepareStatement(
-            "INSERT INTO adds(userid, image, link, clothes, price, season, path, created_at ) " +
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO adds(userid, clothesName, image, link, clothes, price, season, path, created_at ) " +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
       //고칠 것!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       stmt.setString(1,  userid);
-      // stmt.setString(2, fin.toString()); 
-      stmt.setBinaryStream(2, fileInputStream, (int)(file.length()));
-      stmt.setString(3,  link);
-      stmt.setString(4,  clothes);
-      stmt.setString(5,  price);
-      stmt.setString(6,  seasonStr);
-      stmt.setString(7,  imgpath);
-      stmt.setString(8,  created_at);
+      stmt.setString(2,  clothesName); 
+      stmt.setBinaryStream(3, fileInputStream, (int)(file.length()));
+      stmt.setString(4,  link);
+      stmt.setString(5,  clothes);
+      stmt.setString(6,  price);
+      stmt.setString(7,  seasonStr);
+      stmt.setString(8,  imgpath);
+      stmt.setString(9,  created_at);
       
       result = stmt.executeUpdate();
       if (result != 1) {
@@ -75,6 +76,9 @@
       if (conn != null) try{conn.close();} catch(SQLException e) {}
    }
    
+   if (clothesName == null || clothesName.trim().length() == 0) {
+	      errorMsgs.add("옷 이름을 반드시 입력해주세요.");
+	 }
    if (file == null) {
 	   errorMsgs.add("이미지파일을 반드시 등록해주세요.");
    }
@@ -82,7 +86,7 @@
       errorMsgs.add("링크을 반드시 입력해주세요.");
    }
    if (clothes == null || clothes.length() == 0) {
-      errorMsgs.add("옷에 적합하지 않은 값이 입력되었습니다.");
+      errorMsgs.add("옷종류를 반드시 입력해주세요.");
    }
    if (price == null || price.length() == 0) {
 	      errorMsgs.add("가격을 반드시 입력해주세요.");
@@ -122,11 +126,11 @@
       </div>
       <% } else if (result == 1) { %>
       <div class="alert alert-success">
-      <b><%session.getAttribute("userid"); %></b>님 등록해주셔서 감사합니다.   
+      <b><%out.println(session.getAttribute("userid"));%></b>님 등록해주셔서 감사합니다.   
       </div>
       
       <div class="form-action">
-         <a href="addshow.jsp" class="btn">글 확인하기</a>
+         <a href="addshow.jsp" class="btn">확인하기</a>
       </div>
 
       <%}%>

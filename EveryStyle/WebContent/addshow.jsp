@@ -20,59 +20,50 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
   
   // 사용자 정보를 위한 변수 초기화
   String userid = "";
-  InputStream image = null;
+  String clothesName = "";
   String link = "";
   String clothes = "";
   String season = "";
   String price = "";
-  OutputStream output = response.getOutputStream();
-
+	String imgpath = "";
   // Request로 ID가 있는지 확인
   int id = 0;
   try {
     id = Integer.parseInt(request.getParameter("id"));
   } catch (Exception e) {}
-
+  
   if (id > 0) {
-    try {
-        Class.forName("com.mysql.jdbc.Driver");
-
-        // DB 접속
+  try {
+	  Class.forName("com.mysql.jdbc.Driver");
+      // DB 접속
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-
       // 질의 준비
       stmt = conn.prepareStatement("SELECT * FROM adds WHERE id = ?");
-      stmt.setInt(1, 1);
+      stmt.setInt(1, id);
       
       // 수행
       rs = stmt.executeQuery();
       
       if (rs.next()) {
-          userid = rs.getString("userid");
-            link = rs.getString("link");
-            clothes = rs.getString("clothes");
-            price = rs.getString("price");
-            season = rs.getString("season");
-            image = rs.getBinaryStream("image");
-            int byteRead;
-          while((byteRead = image.read()) != -1) {
-             output.write(byteRead);
-           }
-           image.close();
+    	  userid = rs.getString("userid");
+    	  clothesName = rs.getString("clothesName");
+    	  link = rs.getString("link");
+    	  clothes = rs.getString("clothes");
+    	  price = rs.getString("price");
+    	  season = rs.getString("season");
+    	  imgpath = rs.getString("path");
+            
+          
       }
     }catch (SQLException e) {
-      errorMsg = "SQL 에러: " + e.getMessage();
+     /*  errorMsg = "SQL 에러: " + e.getMessage(); */
     } finally {
       // 무슨 일이 있어도 리소스를 제대로 종료
       if (rs != null) try{rs.close();} catch(SQLException e) {}
       if (stmt != null) try{stmt.close();} catch(SQLException e) {}
       if (conn != null) try{conn.close();} catch(SQLException e) {}
     }
-    image.close();
-    output.flush();
-    output.close();
-  } else {
-    errorMsg = "ID가 지정되지 않았습니다.";
+   
   }
 %>
 <!DOCTYPE html>
@@ -89,7 +80,7 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
    <jsp:include page="share/header.jsp">
       <jsp:param name="current" value="Add" />
    </jsp:include>
-
+   
    <div class="container">
       <%
          if (errorMsg != null && errorMsg.length() > 0 ) {
@@ -97,12 +88,17 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
                 out.print("<div class='alert'>" + errorMsg + "</div>");
              } else {
       %>
+      <div class="row">
+  		<div class="col-sm-6 col-md-3">
+  		<img src="<%=imgpath %>" class="img-thumbnail" alt="picture"/>
+  		</div>
+  		</div>
       <div>
          <!-- XSS (Cross-site scripting)의 위험이 있는 안좋은 코드의 예  -->
-         <h3><%=userid%></h3>
+         <h3><%=clothesName%></h3>
          <ul>
             <li>User ID: <%=userid%></li>
-            <li>Image: <%=image%></li>
+            
             <li>Link: <%=link%></li>
             <li>Clothes: <%
                for (String arr: wear_kinds) {
@@ -133,9 +129,9 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
          <%
             if (id > 0) {
          %>
-         <a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a> <a
-            href="#" class="btn btn-danger" data-action="delete"
-            data-id="<%=id%>">삭제</a>
+         <a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a>
+          
+         <a href="#" class="btn btn-danger" data-action="delete" data-id="<%=id%>">삭제</a>
          <%
             }
          %>

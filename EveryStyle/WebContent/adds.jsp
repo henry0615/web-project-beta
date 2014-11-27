@@ -21,6 +21,7 @@
    
    // 사용자 정보를 위한 변수 초기화
    String userid = "";
+   String clothesName = "";
    String image = "";
    String link = "";
    String clothes = "";
@@ -54,6 +55,7 @@
             
             if (rs.next()) {
                userid = session.getAttribute("userid").toString();
+               clothesName = rs.getString("clothesName");
                image = rs.getString("image");
                link = rs.getString("link");
                clothes = rs.getString("clothes");
@@ -81,7 +83,7 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta  http-equiv="Content-Type" content="text/html; charset="UTF-8">
+<meta  http-equiv="Content-Type" content="text/html" charset="UTF-8">
 <title>옷 등록</title>
    <link href="css/bootstrap.min.css" rel="stylesheet">
    <link href="css/base.css" rel="stylesheet">
@@ -125,6 +127,13 @@
     </div>
     
     <div class="control-group">
+       <label class="control-label" for="clothesName">ClothesName</label>
+       <div class="controls">
+          <input type="text"  name="clothesName" value="<%=clothesName%>">
+       </div>
+    </div>
+    
+    <div class="control-group">
        <label class="control-label" for="image">Image</label>
        <div class="controls">
           <input type="file"  name="image" value="<%=image%>">
@@ -134,7 +143,7 @@
        <div class="control-group">
        <label class="control-label" for="link">Link</label>
        <div class="controls">
-          <input type="text"  name="link" value="<%=link%>">
+          <input type="url"  name="link" value="<%=link%>">
        </div>
     </div>
     
