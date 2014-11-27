@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*"  import="java.sql.*" 
-		import="org.apache.commons.lang3.StringUtils" %>
+		import="org.apache.commons.lang3.StringUtils"%>
 <%
 
 	String[] wear_kinds ={ "Outer", "Top", "Pants", "Skirt&Dress"};
 	String[] wear_seasons ={ "Spring", "Summer", "fall", "Winter"};
-	String[] wear_prices ={ "1~2만원",  "2~3만원", "3~4만원", "4~5만원","5만원이상"};
+	String[] wear_prices ={ "5만원 이하",  "5만원~10만원", "10만원~20만원", "20만원 이상"};
 	
 	String errorMsg = null;
 
-	String actionUrl;
+	String actionUrl = null;
 	// DB 접속을 위한 준비
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -25,16 +25,18 @@
 	String wear_price ="";
 	List<String> wear_seasonList = null;
 	List<String> wear_priceList =null;
+	String imgpath = "";
+	Vector<String> imgpathList = new Vector<String>();
+	Vector<Integer> idList = new Vector<Integer>();
 	
+	//List<String> favoriteList = null;
 	
- 	// Request로 ID가 있는지 확인
 	int id = 0;
-
 	try {
 		id = Integer.parseInt(request.getParameter("id"));
-		
 	} catch (Exception e) {}
 
+	
 		try {
 		    Class.forName("com.mysql.jdbc.Driver");
 
@@ -42,37 +44,27 @@
 			conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
 	 		// 질의 준비
-			stmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
-			stmt.setInt(1, id);
+			stmt = conn.prepareStatement("SELECT id, path FROM adds ORDER BY created_at DESC");
+			//stmt.setInt(1, id);
 			
 			// 수행
 	 		rs = stmt.executeQuery();
 			
-			if (rs.next()) {
-				wear_kind = rs.getString("wear_kind");
-				wear_season = rs.getString("wear_season");
-				wear_price = rs.getString("wear_price");
-
-
-				if (wear_season != null && wear_season.length() > 0) {
-					wear_seasonList = Arrays.asList(StringUtils.split(wear_season, ","));
-				}
-				
-				if (wear_price != null && wear_price.length() > 0) {
-					wear_priceList = Arrays.asList(StringUtils.split(wear_price, ","));
-				}
+			while (rs.next()) {
+				imgpathList.add(rs.getString("path"));
+				idList.add(rs.getInt("id"));
 			}
-			
 		}catch (SQLException e) {
+			errorMsg = "SQL 에러: " + e.getMessage();
 		} finally {
 			// 무슨 일이 있어도 리소스를 제대로 종료
 			if (rs != null) try{rs.close();} catch(SQLException e) {}
 			if (stmt != null) try{stmt.close();} catch(SQLException e) {}
 			if (conn != null) try{conn.close();} catch(SQLException e) {}
 		}
-	
-%>  
 
+%>  
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,6 +82,16 @@
   </jsp:include>
   
   <div class="container">
+ 
+ <% for(int i=0; i<imgpathList.size(); i++ ) {%> 
+			<div class="row">
+  		<div class="col-sm-6 col-md-3">
+  		<a href="addshow.jsp?id=<%=idList.get(i)%>">
+  		<img src="<%=imgpathList.get(i) %>" class="img-thumbnail" alt="picture">
+  		</a>
+  		</div>
+  		</div>
+  <% }%>
 	<%
  	if (errorMsg != null && errorMsg.length() > 0 ) {
 			// SQL 에러의 경우 에러 메시지 출력
@@ -98,7 +100,7 @@
 	 %>
 	 	<div>
 	 		<div>
-		  <form class="form-horizontal" action="check.jsp"  method="post">
+		  <form class="form-horizontal" action="<%=actionUrl%>" method="post">
 			<fieldset>
         <legend class="legend">Search</legend>
 			  	<%
@@ -112,7 +114,7 @@
 					<% for(String wear_kindName : wear_kinds) { %> 
 						<div  class="col-sm-offset-2 radio">
 							<label> 
-							  <input type="radio" name="wear_kinds" value="<%=wear_kindName %>" 
+							  <input type="radio" value="<%=wear_kindName %>" name="wear_kind"
 							  <% if (wear_kindName.equals(wear_kind)) { out.print("checked");} %>
 							  > 
 							  <%=wear_kindName %>
@@ -168,10 +170,12 @@
 
 				<div class="form-group">
 					<a href="index.jsp" class="col-sm-offset-2 btn btn-default">목록으로</a>
-					<input type="submit"  class="btn btn-default btn-primary" value="검색"></a>
+					<% if (id <= 0) { %>
+						<input type="submit" class="btn btn-default btn-primary" value="가입">
+					<% } else { %>
+						<input type="submit" class="btn btn-default btn-primary" value="수정">
+					<% } %>
 				</div>
-						
-				
 			</fieldset>
 		  </form>
     </div>
