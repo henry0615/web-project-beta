@@ -100,106 +100,114 @@
       out.print("<div class='alert'>" + errorMsg + "</div>");
  }
  %>
- 
-     <div>
-        <form class="form-horizontal" action="<%=actionUrl%>"  method="post" enctype="multipart/form-data">
-         <fieldset>
-        <legend class="legend">Add</legend>
-              <%
-              if (id > 0) {
-                 out.println("<input type='hidden' name='id' value='"+id+"'>");
-              }
-              %>
-            <div class="control-group">
-               <label class="control-label" for="userid">ID</label>
-               <div class="controls">
-                  <input id="disabledInput" type="text" placeholder="<%out.println(session.getAttribute("userid")); %>" disabled>
-               </div>
-            </div>
-            
-            <div class="control-group">
-               <label class="control-label" for="image">Image</label>
-               <div class="controls">
-                  <input type="file"  name="image" value="<%=image%>">
-               </div>
-            </div>
+ <%if (session.getAttribute("userid") == null) {%>
+	 <div class="alert alert-error">
+	 	<h3>로그인 후 이용 가능합니다.</h3>
+	 </div>
+	 <div class="form-action">
+	 	<a href="index.jsp" class="btn">올아가기</a>
+	 </div>
+<%} else { %>
 
-               <div class="control-group">
-               <label class="control-label" for="link">Link</label>
-               <div class="controls">
-                  <input type="text"  name="link" value="<%=link%>">
-               </div>
-            </div>
-            
-
-
-            <div class="control-group">
-               <label class="control-label">Clothes</label>
-               <div class="controls">
-                  <% for(String clothesOption : wear_kinds) { %> 
-                     <label class="radio"> 
-                       <input type="radio" value="<%=clothesOption %>" name="clothes"
-                       <% if (clothesOption.equals(clothes)) { out.print("checked");} %>
-                       > 
-                       <%=clothesOption %>
-                     </label>
-                  <% } %> 
-               </div>
-            </div>
-            
-            <div class="control-group">
-               <label class="control-label">Price</label>
-               <div class="controls">
-                  <% for(String priceOption : wear_prices) { %> 
-                     <label class="radio"> 
-                       <input type="radio" value="<%=priceOption%>" name="price"
-                       <% if (priceOption.equals(clothes)) { out.print("checked");} %>
-                       > 
-                       <%=priceOption %>
-                     </label>
-                  <% } %> 
-               </div>
-            </div>
-            
-         
-
-            <div class="control-group">
-               <label class="control-label">Season</label>
-               <div class="controls">
-                  <% 
-                  for (String seasonOption : wear_seasons) {
-                     %>
-                     <label class="checkbox"> 
-                       <input type="checkbox" name="season" value="<%=seasonOption%>"
-                       <% 
-                          if (seasonList != null && seasonList.contains(seasonOption)) { 
-                             out.print("checked");
-                            } 
-                         %>
-                       >
-                       <%=seasonOption %>
-                     </label> 
-                     <%            
-                  }                  
-                  %>
-               </div>
-            </div>
-            
-            
-            
-            <div class="form-actions">
-               <a href="index.jsp" class="btn">목록으로</a>
-               <% if (id <= 0) { %>
-                  <input type="submit" class="btn btn-primary" value="등록">
-               <% } else { %>
-                  <input type="submit" class="btn btn-primary" value="수정">
-               <% } %>
-            </div>
-         
-            
-         </fieldset>
-        </form>
+<form class="form-horizontal" action="<%=actionUrl%>"  method="post" enctype="multipart/form-data">
+<fieldset>
+<legend class="legend">Add</legend>
+      <%
+      if (id > 0) {
+         out.println("<input type='hidden' name='id' value='"+id+"'>");
+      }
+      %>
+    <div class="control-group">
+       <label class="control-label" for="userid">ID</label>
+       <div class="controls">
+          <input id="disabledInput" type="text" placeholder="<%out.println(session.getAttribute("userid")); %>" disabled>
+       </div>
     </div>
+    
+    <div class="control-group">
+       <label class="control-label" for="image">Image</label>
+       <div class="controls">
+          <input type="file"  name="image" value="<%=image%>">
+       </div>
+    </div>
+
+       <div class="control-group">
+       <label class="control-label" for="link">Link</label>
+       <div class="controls">
+          <input type="text"  name="link" value="<%=link%>">
+       </div>
+    </div>
+    
+
+
+    <div class="control-group">
+       <label class="control-label">Clothes</label>
+       <div class="controls">
+          <% for(String clothesOption : wear_kinds) { %> 
+             <label class="radio"> 
+               <input type="radio" value="<%=clothesOption %>" name="clothes"
+               <% if (clothesOption.equals(clothes)) { out.print("checked");} %>
+               > 
+               <%=clothesOption %>
+             </label>
+          <% } %> 
+       </div>
+    </div>
+    
+    <div class="control-group">
+       <label class="control-label">Price</label>
+       <div class="controls">
+          <% for(String priceOption : wear_prices) { %> 
+             <label class="radio"> 
+               <input type="radio" value="<%=priceOption%>" name="price"
+               <% if (priceOption.equals(clothes)) { out.print("checked");} %>
+               > 
+               <%=priceOption %>
+             </label>
+          <% } %> 
+       </div>
+    </div>
+    
+ 
+
+    <div class="control-group">
+       <label class="control-label">Season</label>
+       <div class="controls">
+          <% 
+          for (String seasonOption : wear_seasons) {
+             %>
+             <label class="checkbox"> 
+               <input type="checkbox" name="season" value="<%=seasonOption%>"
+               <% 
+                  if (seasonList != null && seasonList.contains(seasonOption)) { 
+                     out.print("checked");
+                    } 
+                 %>
+               >
+               <%=seasonOption %>
+             </label> 
+             <%            
+          }                  
+          %>
+       </div>
+    </div>
+    
+    
+    
+    <div class="form-actions">
+       <a href="index.jsp" class="btn">목록으로</a>
+       <% if (id <= 0) { %>
+          <input type="submit" class="btn btn-primary" value="등록">
+       <% } else { %>
+          <input type="submit" class="btn btn-primary" value="수정">
+       <% } %>
+    </div>
+ 
+    
+ </fieldset>
+</form>
+<%} %>
   </div>
+  <jsp:include page="share/footer.jsp" />
 </body>
 </html>

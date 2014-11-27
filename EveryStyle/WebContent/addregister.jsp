@@ -19,26 +19,38 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg\\";
+   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg/";
    MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
    
+	//날짜+시간 저장
+	 java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+	 String today = formatter.format(new java.util.Date());
+   
    String userid = session.getAttribute("userid").toString();
+   //파일명 변경하여 업로드
+   String realFileName = userid + fileName;  //사용자 아이디와 파일이름 합치기
+   File NewFile = new File(path + realFileName);
+   file.renameTo(NewFile);
+   
    String link = multi.getParameter("link");
    String clothes = multi.getParameter("clothes");
    String price = multi.getParameter("price");
    String[] season = multi.getParameterValues("season");
    String seasonStr = StringUtils.join(season, ",");
+   String imgpath = path + realFileName;
+   String created_at = today;
    
-   FileInputStream fileInputStream = new FileInputStream(file);
+	 File saveFile = new File(path + realFileName);
+   FileInputStream fileInputStream = new FileInputStream(saveFile);
    
    try {
       Class.forName("com.mysql.jdbc.Driver");
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
       stmt = conn.prepareStatement(
-            "INSERT INTO adds(userid, image, link, clothes, price, season ) " +
-            "VALUES(?, ?, ?, ?, ?, ?)"
+            "INSERT INTO adds(userid, image, link, clothes, price, season, path, created_at ) " +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
             );
       //고칠 것!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       stmt.setString(1,  userid);
@@ -48,6 +60,8 @@
       stmt.setString(4,  clothes);
       stmt.setString(5,  price);
       stmt.setString(6,  seasonStr);
+      stmt.setString(7,  imgpath);
+      stmt.setString(8,  created_at);
       
       result = stmt.executeUpdate();
       if (result != 1) {
@@ -61,30 +75,21 @@
       if (conn != null) try{conn.close();} catch(SQLException e) {}
    }
    
-   /*request.setCharacterEncoding("utf-8");
-   String userid = request.getParameter("userid");
-   String link = request.getParameter("link");
-   String clothes = request.getParameter("clothes");
-   String price = request.getParameter("price");
-   String[] season = request.getParameterValues("season");
-   String seasonStr = StringUtils.join(season, ",");
-   
-   
-   FileItemFactory factory = new DiskFileItemFactory();
-   ServletFileUpload upload = new ServletFileUpload(factory);
-   */
-   /* InputStream inputStream = null;
-   Part filePart = request.getPart("image");
-   inputStream = filePart.getInputStream(); */
-   
- 
-  if (link == null || link.trim().length() == 0) {
-      errorMsgs.add("링크을 반드시 등록해주세요.");
+   if (file == null) {
+	   errorMsgs.add("이미지파일을 반드시 등록해주세요.");
    }
-   
+   if (link == null || link.trim().length() == 0) {
+      errorMsgs.add("링크을 반드시 입력해주세요.");
+   }
    if (clothes == null || clothes.length() == 0) {
       errorMsgs.add("옷에 적합하지 않은 값이 입력되었습니다.");
    }
+   if (price == null || price.length() == 0) {
+	      errorMsgs.add("가격을 반드시 입력해주세요.");
+	 }
+   if (seasonStr == null || seasonStr.length() == 0) {
+	      errorMsgs.add("게절을 반드시 입력해주세요.");
+	 }
  
 %>
 <!DOCTYPE html>
