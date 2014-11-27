@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*"  import="java.sql.*" 
-		import="org.apache.commons.lang3.StringUtils"%>
+		import="org.apache.commons.lang3.StringUtils" %>
 <%
 
 	String[] wear_kinds ={ "Outer", "Top", "Pants", "Skirt&Dress"};
 	String[] wear_seasons ={ "Spring", "Summer", "fall", "Winter"};
-	String[] wear_prices ={ "5만원 이하",  "5만원~10만원", "10만원~20만원", "20만원 이상"};
+	String[] wear_prices ={ "1~2만원",  "2~3만원", "3~4만원", "4~5만원","5만원이상"};
 	
 	String errorMsg = null;
 
@@ -26,17 +26,15 @@
 	List<String> wear_seasonList = null;
 	List<String> wear_priceList =null;
 	
-	//List<String> favoriteList = null;
 	
-	// Request로 ID가 있는지 확인
+ 	// Request로 ID가 있는지 확인
 	int id = 0;
+
 	try {
 		id = Integer.parseInt(request.getParameter("id"));
+		
 	} catch (Exception e) {}
 
-	if (id > 0) {
-		// Request에 id가 있으면 update모드라 가정
-		actionUrl = "update.jsp";
 		try {
 		    Class.forName("com.mysql.jdbc.Driver");
 
@@ -64,19 +62,17 @@
 					wear_priceList = Arrays.asList(StringUtils.split(wear_price, ","));
 				}
 			}
+			
 		}catch (SQLException e) {
-			errorMsg = "SQL 에러: " + e.getMessage();
 		} finally {
 			// 무슨 일이 있어도 리소스를 제대로 종료
 			if (rs != null) try{rs.close();} catch(SQLException e) {}
 			if (stmt != null) try{stmt.close();} catch(SQLException e) {}
 			if (conn != null) try{conn.close();} catch(SQLException e) {}
 		}
-	} else {
-		actionUrl = "register.jsp";
-	}
+	
 %>  
-    
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,7 +98,7 @@
 	 %>
 	 	<div>
 	 		<div>
-		  <form class="form-horizontal" action="<%=actionUrl%>" method="post">
+		  <form class="form-horizontal" action="check.jsp"  method="post">
 			<fieldset>
         <legend class="legend">Search</legend>
 			  	<%
@@ -116,7 +112,7 @@
 					<% for(String wear_kindName : wear_kinds) { %> 
 						<div  class="col-sm-offset-2 radio">
 							<label> 
-							  <input type="radio" value="<%=wear_kindName %>" name="wear_kind"
+							  <input type="radio" name="wear_kinds" value="<%=wear_kindName %>" 
 							  <% if (wear_kindName.equals(wear_kind)) { out.print("checked");} %>
 							  > 
 							  <%=wear_kindName %>
@@ -172,12 +168,10 @@
 
 				<div class="form-group">
 					<a href="index.jsp" class="col-sm-offset-2 btn btn-default">목록으로</a>
-					<% if (id <= 0) { %>
-						<input type="submit" class="btn btn-default btn-primary" value="가입">
-					<% } else { %>
-						<input type="submit" class="btn btn-default btn-primary" value="수정">
-					<% } %>
+					<input type="submit"  class="btn btn-default btn-primary" value="검색"></a>
 				</div>
+						
+				
 			</fieldset>
 		  </form>
     </div>
