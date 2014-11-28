@@ -3,9 +3,9 @@
 		import="org.apache.commons.lang3.StringUtils"%>
 <%
 
-	String[] wear_kinds ={ "Outer", "Top", "Pants", "Skirt&Dress"};
-	String[] wear_seasons ={ "Spring", "Summer", "fall", "Winter"};
-	String[] wear_prices ={ "5만원 이하",  "5만원~10만원", "10만원~20만원", "20만원 이상"};
+String[] wear_kinds = {"Outer", "Top", "Pants", "Skirt&Dress"};
+String[] wear_seasons = {"Spring", "Summer", "Fall", "Winter"};
+String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만원이상" };
 	
 	String errorMsg = null;
 
@@ -20,11 +20,12 @@
 	String dbPassword = "asdf";
 	
 	// 의류 정보를위한 변수 초기화
-	String wear_kind = "";
-	String wear_season= "";
-	String wear_price ="";
-	List<String> wear_seasonList = null;
-	List<String> wear_priceList =null;
+	String userid = "";
+	String clothes = "";
+	String season= "";
+	String price ="";
+	List<String> seasonList = null;
+	List<String>priceList =null;
 	String imgpath = "";
 	Vector<String> imgpathList = new Vector<String>();
 	Vector<Integer> idList = new Vector<Integer>();
@@ -35,7 +36,6 @@
 	try {
 		id = Integer.parseInt(request.getParameter("id"));
 	} catch (Exception e) {}
-
 	
 		try {
 		    Class.forName("com.mysql.jdbc.Driver");
@@ -62,6 +62,7 @@
 			if (stmt != null) try{stmt.close();} catch(SQLException e) {}
 			if (conn != null) try{conn.close();} catch(SQLException e) {}
 		}
+		actionUrl = "searchResult.jsp";
 
 %>  
     
@@ -83,104 +84,114 @@
   
   <div class="container">
  
- <% for(int i=0; i<imgpathList.size(); i++ ) {%> 
-			<div class="row">
-  		<div class="col-sm-6 col-md-3">
-  		<a href="addshow.jsp?id=<%=idList.get(i)%>">
-  		<img src="<%=imgpathList.get(i) %>" class="img-thumbnail" alt="picture">
-  		</a>
-  		</div>
-  		</div>
-  <% }%>
 	<%
  	if (errorMsg != null && errorMsg.length() > 0 ) {
 			// SQL 에러의 경우 에러 메시지 출력
 			out.print("<div class='alert'>" + errorMsg + "</div>");
 	 }
 	 %>
-	 	<div>
-	 		<div>
-		  <form class="form-horizontal" action="<%=actionUrl%>" method="post">
+		  <form class="form-horizontal" action="<%=actionUrl%>" method="post" target="frame">
 			<fieldset>
         <legend class="legend">Search</legend>
 			  	<%
 			  	if (id > 0) {
 			  		out.println("<input type='hidden' name='id' value='"+id+"'>");
 			  	}
-			  	%>			
-
-				<div class="form-group ">
+			  	%>
+			  	
+			  	<div class="row">
+			  	
+			  	<div class="col-lg-3">
+			  	<div class="form-group ">
 					<label class="col-sm-2 control-label">Kind</label>
-					<% for(String wear_kindName : wear_kinds) { %> 
-						<div  class="col-sm-offset-2 radio">
+					<% for(String clothesOption : wear_kinds) { %> 
+						<div  class="col-sm-offset-3 radio">
 							<label> 
-							  <input type="radio" value="<%=wear_kindName %>" name="wear_kind"
-							  <% if (wear_kindName.equals(wear_kind)) { out.print("checked");} %>
+							  <input type="radio" value="<%=clothesOption%>" name="clothesOption"
+							  <% if (clothesOption.equals(clothes)) { out.print("checked");} %>
 							  > 
-							  <%=wear_kindName %>
+							  <%=clothesOption%>
 							</label>
 						</div>
-					<% } %> 
+					<%
+						}
+					%> 
+				</div>
 				</div>
 				
-					
+					<div class="col-lg-3">
 					<div class="form-group ">
-					<label class=" col-sm-2 control-label">Season</label>
-					<% 
-						for (String wear_seasonName: wear_seasons) {
-					%>
-						<div class="col-sm-offset-2 checkbox">
+					<label class="col-sm-2 control-label">Season</label>
+					<% for (String seasonOption: wear_seasons) {	%>
+						<div class="col-sm-offset-3 checkbox">
 							<label> 
-							  <input type="checkbox" name="wear_kinds" value="<%=wear_seasonName%>"
+							  <input type="checkbox" name="seasonOption" value="<%=seasonOption%>"
 							  <% 
-							  	if ((wear_seasonList)!= null && wear_seasonList.contains(wear_seasonName)) { 
+							  	if ((seasonList)!= null && seasonList.contains(seasonOption)){ 
 								  	out.print("checked");
 								 	} 
 								 %>
 							  >
-							  <%=wear_seasonName %>
+							  <%=seasonOption  %>
 							</label> 
 						</div>
 					<%				
 						}			
 					%>
 					</div>
+					</div>
 					
+					<div class="col-lg-3">
 					<div class="form-group ">
 					<label class=" col-sm-2 control-label">Price</label>
-					<% 
-						for (String wear_priceNumber: wear_prices) {
-					%>
-						<div class="col-sm-offset-2 checkbox">
+					<% for (String priceOption: wear_prices) {	%>
+						<div class="col-sm-offset-3 checkbox">
 							<label> 
-							  <input type="checkbox" name="wear_kinds" value="<%=wear_priceNumber%>"
+							  <input type="checkbox" name="priceOption" value="<%=priceOption%>"
 							  <% 
-							  	if ((wear_priceList) != null && wear_priceList.contains(wear_priceNumber)) { 
+							  	if ((priceList) != null && priceList.contains(priceOption)) { 
 								  	out.print("checked");
 								 	} 
 								 %>
 							  >
-							  <%=wear_priceNumber %>
+							  <%=priceOption %>
 							</label> 
 						</div>
 					<%				
 						}			
 					%>
 				</div>
-
+				</div>
+				
+				<div class="col-lg-3">
+					<div class="form-group ">
+					<label class="col-sm-2 control-label">ID</label>
+							<label> 
+							  <input type="text" name="userid" value="<%=userid%>">
+							</label> 
+						</div>
+					</div>
+				
+</div>
 				<div class="form-group">
-					<a href="index.jsp" class="col-sm-offset-2 btn btn-default">목록으로</a>
-					<% if (id <= 0) { %>
-						<input type="submit" class="btn btn-default btn-primary" value="가입">
-					<% } else { %>
-						<input type="submit" class="btn btn-default btn-primary" value="수정">
-					<% } %>
+					<a href="search.jsp" class="col-sm-offset-2 btn btn-default">목록으로</a>
+						<input type="submit" class="btn btn-success" value="검색">
 				</div>
 			</fieldset>
 		  </form>
+		  <!-- 최신 순으로 나열 -->
+		 
+		  <div class="row">
+		  <% for(int i=0; i<imgpathList.size(); i++ ) {%> 
+  		<div class="col-sm-6 col-md-3">
+  		<a href="addshow.jsp?id=<%=idList.get(i)%>">
+  		<img src="<%=imgpathList.get(i) %>" class="img-thumbnail" alt="picture"/>
+  		</a>
+  		</div>
+  		<% }%>
+  		</div>
+  		<iframe name="frame"></iframe>
     </div>
-  </div>
- </div>
-
+<jsp:include page="share/footer.jsp" />
 </body>
 </html>
