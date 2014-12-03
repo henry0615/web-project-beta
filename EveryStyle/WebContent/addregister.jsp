@@ -19,7 +19,7 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "C:/Users/lg/web/web-project-beta/EveryStyle/WebContent/uploadImg/";
+   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg/";
    MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
@@ -40,7 +40,7 @@
    String price = multi.getParameter("price");
    String[] season = multi.getParameterValues("season");
    String seasonStr = StringUtils.join(season, ",");
-   String imgpath = path + realFileName;
+   String imgpath = "./uploadImg/" + realFileName;
    String created_at = today;
    
 	 File saveFile = new File(path + realFileName);
@@ -53,7 +53,6 @@
             "INSERT INTO adds(userid, clothesName, image, link, clothes, price, season, path, created_at ) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
-      //고칠 것!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       stmt.setString(1,  userid);
       stmt.setString(2,  clothesName); 
       stmt.setBinaryStream(3, fileInputStream, (int)(file.length()));
@@ -79,7 +78,7 @@
    if (clothesName == null || clothesName.trim().length() == 0) {
 	      errorMsgs.add("옷 이름을 반드시 입력해주세요.");
 	 }
-   if (file == null) {
+   if (fileName == null) {
 	   errorMsgs.add("이미지파일을 반드시 등록해주세요.");
    }
    if (link == null || link.trim().length() == 0) {
@@ -126,7 +125,7 @@
       </div>
       <% } else if (result == 1) { %>
       <div class="alert alert-success">
-      <b><%out.println(session.getAttribute("userid"));%></b>님 등록해주셔서 감사합니다.   
+      <b><span class="glyphicon glyphicon-ok"></span><%out.println(session.getAttribute("userid"));%></b>님 등록해주셔서 감사합니다.   
       </div>
       
       <div class="form-action">
