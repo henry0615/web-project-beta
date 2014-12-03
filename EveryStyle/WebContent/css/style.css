@@ -1,0 +1,62 @@
+@CHARSET "utf-8";
+
+div {
+	vertical-align: middle;
+}
+.container div {}
+
+#borderDiv {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -250px 0 0 -400px;
+	width: 850px;
+	height: 500px;
+}
+
+#blankDiv {
+	border: 1px solid #e5e5e5;
+	width: 400px;
+	height: 400px;
+	margin:50px 40px 50px 40px;
+}
+
+#styleDiv {
+	border: 1px solid #e5e5e5;
+	width: 600px;
+	height: 400px;
+	margin:50px 40px 50px 0;
+}
+#blankDiv, #styleDiv div {border: 1px solid #e5e5e5;}
+
+#blankDiv, #styleDiv {
+	float: left;
+	text-align: center;
+}
+
+/*#outer, #top, #pants, #skirtdress {
+	width: 200px;
+	height: 100px;
+	margin: 20px 50px 20px 50px;
+	text-align: center;
+}*/
+
+#styleTable td{border:1px solid #e5e5e5;}
+#styleTable div {width:150px; height:150px;}
+#styleTable img {width:100px; height:100px;}
+
+#categoryList img {width:100px; height:100px;}
+#categoryList td {
+	border: 1px solid #e5e5e5;
+	width:100px;
+	height:120px;
+	margin:0;
+	padding:0;
+}
+
+#clothImg {width:400px;}
+#clothImg img{
+	width:100px;
+	height:100px;
+}
+
