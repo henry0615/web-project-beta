@@ -58,7 +58,7 @@ String actionUrl = null;
 		conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
  		// 질의 준비
-		stmt = conn.prepareStatement("SELECT id, userid, clothesName, path FROM adds WHERE clothes LIKE ? AND season LIKE ? AND price LIKE ? AND userid LIKE ?");
+		stmt = conn.prepareStatement("SELECT id, userid, clothesName, path FROM adds WHERE clothes LIKE ? AND season LIKE ? AND price LIKE ? AND userid LIKE ? ORDER BY created_at DESC");
 		stmt.setString(1, "%" + RclothesOption + "%");
 		stmt.setString(2, "%" + RseasonOptionStr + "%");
 		stmt.setString(3, "%" + RpriceOption + "%");
@@ -87,26 +87,26 @@ String actionUrl = null;
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/banner.css" rel="stylesheet">
 	<link href="css/base.css" rel="stylesheet">
 	<script src="js/jquery-1.8.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<jsp:include page="share/header.jsp">
- <jsp:param name="current" value="Search" />
-</jsp:include>
 
  <div class="container">
 
  <div class="row">
-		  <% for(int i=0; i<pathList.size(); i++ ) {%> 
-  		<div class="col-sm-6 col-md-3">
-  		<a href="addshow.jsp?id=<%=idList.get(i)%>">
-  		<img src="<%=pathList.get(i) %>" class="img-thumbnail" alt="picture"/>
-  		<%out.println(clothesNameList.get(i)); %>
-  		</a>
-  		</div>
-  		<% }%>
+ 
+ 
+		  <% for(int i=0; i<pathList.size(); i++ ) {%>
+		  <td>
+	  		<div class="col-sm-6 col-md-3">
+	  		<a href="addshow.jsp?id=<%=idList.get(i)%>">
+	  		<img src="<%=pathList.get(i) %>" class="img-thumbnail" alt="picture"/>
+	  		</a>
+	  		</div>
+	  	<%} %>
  </div>
  </div>
 </body>

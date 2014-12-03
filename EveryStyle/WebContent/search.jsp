@@ -73,6 +73,7 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
 	<title>스타일 탐색</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/base.css" rel="stylesheet">
+	<link href="css/banner.css" rel="stylesheet">
 	<script src="js/jquery-1.8.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 </head>
@@ -182,15 +183,15 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
 		  <!-- 최신 순으로 나열 -->
 		 
 		  <div class="row">
-		  <% for(int i=0; i<imgpathList.size(); i++ ) {%> 
+		 <%--  <% for(int i=0; i<imgpathList.size(); i++ ) {%> 
   		<div class="col-sm-6 col-md-3">
   		<a href="addshow.jsp?id=<%=idList.get(i)%>">
   		<img src="<%=imgpathList.get(i) %>" class="img-thumbnail" alt="picture"/>
   		</a>
   		</div>
   		<% }%>
-  		</div>
-  		<iframe name="frame"></iframe>
+  		</div> --%>
+  		<iframe name="frame" src="searchResult.jsp" frameborder="0" width="100%" height="500px" scrolling="auto"></iframe>
     </div>
 <jsp:include page="share/footer.jsp" />
 </body>
