@@ -20,6 +20,7 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
   
   // 사용자 정보를 위한 변수 초기화
   String userid = "";
+  String dbuserid = "";
   String clothesName = "";
   String link = "";
   String clothes = "";
@@ -46,14 +47,13 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
       
       if (rs.next()) {
     	  userid = rs.getString("userid");
+    	  dbuserid = session.getAttribute("userid").toString();
     	  clothesName = rs.getString("clothesName");
     	  link = rs.getString("link");
     	  clothes = rs.getString("clothes");
     	  price = rs.getString("price");
     	  season = rs.getString("season");
-    	  imgpath = rs.getString("path");
-            
-          
+    	  imgpath = rs.getString("path");     
       }
     }catch (SQLException e) {
      /*  errorMsg = "SQL 에러: " + e.getMessage(); */
@@ -126,15 +126,14 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
 
       <div class="form-actions">
          <a href="index.jsp" class="btn">목록으로</a>
-         <%
-            if (id > 0) {
-         %>
-         <a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a>
-          
-         <a href="#" class="btn btn-danger" data-action="delete" data-id="<%=id%>">삭제</a>
-         <%
-            }
-         %>
+         
+         <%if (id > 0) { 
+          	if(userid.equals(dbuserid)){ ;%>
+         			<a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a>
+        		 	<a href="#" class="btn btn-danger" data-action="delete" data-id="<%=id%>">삭제</a>
+        		 <% } %>
+        	<% } %>
+         
       </div>
       <script>
          $("a[data-action='delete']").click(function() {
