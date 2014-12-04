@@ -22,16 +22,19 @@ String currentMenu = request.getParameter("current");
       </div>
   </div>
   <div class="container container-fluid" style="padding-top:50px">
-		<div class="jumbotron">
+  <div class="banner">
+		<!-- <img alt="banner" src="css/image/banner.png" width="100%" height="100%"/> -->
   		<div class="container">
-    		<h1>Every Style</h1>
-  		</div>
+    		<h1 >Every Style</h1>
+		</div>
 		</div>
 		
-		<ul class="nav nav-tabs">
-		<li class="active"><a href="index.jsp">Coordination</a></li>
-		<li><a href="adds.jsp">Add</a></li>
-		<li><a href="search.jsp">Search</a></li>
-		<li><a href="#">Create</a></li>
+		<ul class="nav nav-tabs" id="myTab">
+		<li class="active" data-toggle="tab"><a href="coordination.jsp">Coordination</a></li>
+		<li><a href="adds.jsp" data-toggle="tab">Add</a></li>
+		<li><a href="search.jsp" data-toggle="tab">Search</a></li>
+		<li><a href="create.jsp" data-toggle="tab">Create</a></li>
 		</ul>
  	</div>  
+ 	
+ 
