@@ -39,7 +39,7 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
       // DB 접속
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
       // 질의 준비
-      stmt = conn.prepareStatement("SELECT * FROM adds WHERE id = ?");
+      stmt = conn.prepareStatement("SELECT userid, clothesName, link, clothes, price, season, path FROM adds WHERE id = ?");
       stmt.setInt(1, id);
       
       // 수행
@@ -47,16 +47,16 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
       
       if (rs.next()) {
     	  userid = rs.getString("userid");
-    	  dbuserid = session.getAttribute("userid").toString();
     	  clothesName = rs.getString("clothesName");
     	  link = rs.getString("link");
     	  clothes = rs.getString("clothes");
     	  price = rs.getString("price");
     	  season = rs.getString("season");
-    	  imgpath = rs.getString("path");     
+    	  imgpath = rs.getString("path");
+          
       }
     }catch (SQLException e) {
-     /*  errorMsg = "SQL 에러: " + e.getMessage(); */
+       errorMsg = "SQL 에러: " + e.getMessage();
     } finally {
       // 무슨 일이 있어도 리소스를 제대로 종료
       if (rs != null) try{rs.close();} catch(SQLException e) {}
@@ -72,21 +72,19 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
 <meta charset="UTF-8">
 <title>옷 정보</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/banner.css" rel="stylesheet">
 <link href="css/base.css" rel="stylesheet">
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-   <jsp:include page="share/header.jsp">
-      <jsp:param name="current" value="Add" />
-   </jsp:include>
    
    <div class="container">
       <%
          if (errorMsg != null && errorMsg.length() > 0 ) {
                 // SQL 에러의 경우 에러 메시지 출력
                 out.print("<div class='alert'>" + errorMsg + "</div>");
-             } else {
+         } else {
       %>
       <div class="row">
   		<div class="col-sm-6 col-md-3">
@@ -102,38 +100,35 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
             <li>Link: <%=link%></li>
             <li>Clothes: <%
                for (String arr: wear_kinds) {
-                               if (arr.equals(clothes)) {
-                                  out.println(arr);
-                               }
-                            }
+            	   if (arr.equals(clothes)) {
+            		   out.println(arr);
+                 }
+               }
             %>
             </li>
             <li>Price: <%
                for (String arr: wear_prices) {
-                               if (arr.equals(price)) {
-                                  out.println(arr);
-                               }
-                            }
+            	   if (arr.equals(price)) {
+            		   out.println(arr);
+                 }
+               }
             %>
             </li>
             <li>Season: <%=season%></li>
             
          </ul>
       </div>
-      <%
-         }
-      %>
 
       <div class="form-actions">
-         <a href="index.jsp" class="btn">목록으로</a>
-         
-         <%if (id > 0) { 
-          	if(userid.equals(dbuserid)){ ;%>
+         <a href="search.jsp" class="btn">목록으로</a>
+        <%if (id > 0) { 
+        	if(session.getAttribute("userid") != null) {
+          	if(userid.equals(session.getAttribute("userid").toString())){ %>
          			<a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a>
         		 	<a href="#" class="btn btn-danger" data-action="delete" data-id="<%=id%>">삭제</a>
         		 <% } %>
         	<% } %>
-         
+        	<%} %>
       </div>
       <script>
          $("a[data-action='delete']").click(function() {
@@ -143,6 +138,9 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
             return false;
          });
       </script>
+       <%
+         }
+      %>
    </div>
 </body>
 </html>
