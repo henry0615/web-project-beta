@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" import="java.sql.*" import="java.util.*"
-	import="java.io.*" import="org.apache.commons.lang3.StringUtils"%>
+   pageEncoding="UTF-8" import="java.sql.*" import="java.util.*"
+   import="java.io.*" import="org.apache.commons.lang3.StringUtils"%>
 <%@ page import="org.apache.commons.fileupload.*"%>
 <%@ page import="org.apache.commons.io.*"%>
 <%@ page import="org.apache.commons.fileupload.disk.*"%>
@@ -8,7 +8,6 @@
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
 <%@ page import="com.oreilly.servlet.MultipartRequest"%>
 <%
-
    // DB 접속을 위한 준비
    Connection conn = null;
    PreparedStatement stmt = null;
@@ -19,21 +18,21 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg/";
+   String path = "C:/Users/lg/Desktop/web/web-project-beta/EveryStyle/WebContent/uploadImg/";
    MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
    
-	//날짜+시간 저장
-	 java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
-	 String today = formatter.format(new java.util.Date());
+   //날짜+시간 저장
+    java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+    String today = formatter.format(new java.util.Date());
    
    String userid = session.getAttribute("userid").toString();
    //파일명 변경하여 업로드
-   String realFileName = userid + fileName;  //사용자 아이디와 파일이름 합치기
-   File NewFile = new File(path + realFileName);
-   file.renameTo(NewFile);
+    
    
+   String realFileName = userid + fileName;  //사용자 아이디와 파일이름 합치기
+  
    String clothesName = multi.getParameter("clothesName");
    String link = multi.getParameter("link");
    String clothes = multi.getParameter("clothes");
@@ -42,10 +41,47 @@
    String seasonStr = StringUtils.join(season, ",");
    String imgpath = "./uploadImg/" + realFileName;
    String created_at = today;
+FileInputStream fileInputStream = null;
    
-	 File saveFile = new File(path + realFileName);
-   FileInputStream fileInputStream = new FileInputStream(saveFile);
+if (file != null) {
+ File NewFile = new File(path + realFileName);
+   file.renameTo(NewFile);
+
+ File saveFile = new File(path + realFileName);
+    fileInputStream = new FileInputStream(saveFile);
+   }
    
+   
+   if (clothesName == null || clothesName.trim().length() == 0) {
+         errorMsgs.add("옷 이름을 반드시 입력해주세요.");
+    }
+    if (file == null) {
+      errorMsgs.add("이미지파일을 반드시 등록해주세요.");
+   } 
+   if (link == null || link.trim().length() == 0) {
+   errorMsgs.add("링크을 반드시 입력해주세요.");
+   }
+   if (clothes == null || clothes.length() == 0) {
+   errorMsgs.add("옷종류를 반드시 입력해주세요.");
+   }
+   if (price == null || price.length() == 0) {
+      errorMsgs.add("가격을 반드시 입력해주세요.");
+   }
+   if (seasonStr == null || seasonStr.length() == 0) {
+      errorMsgs.add("게절을 반드시 입력해주세요.");
+    }
+
+if(!errorMsgs.isEmpty()){
+   
+         errorMsgs.add("등록에 실패하였습니다.1");
+   if(fileInputStream != null) {
+    fileInputStream.close();
+
+
+   File deleteFile = new File(path + realFileName);
+   deleteFile.delete();
+}
+} else {
    try {
       Class.forName("com.mysql.jdbc.Driver");
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -74,26 +110,8 @@
       if (stmt != null) try{stmt.close();} catch(SQLException e) {}
       if (conn != null) try{conn.close();} catch(SQLException e) {}
    }
-   
-   if (clothesName == null || clothesName.trim().length() == 0) {
-	      errorMsgs.add("옷 이름을 반드시 입력해주세요.");
-	 }
-   if (fileName == null) {
-	   errorMsgs.add("이미지파일을 반드시 등록해주세요.");
-   }
-   if (link == null || link.trim().length() == 0) {
-      errorMsgs.add("링크을 반드시 입력해주세요.");
-   }
-   if (clothes == null || clothes.length() == 0) {
-      errorMsgs.add("옷종류를 반드시 입력해주세요.");
-   }
-   if (price == null || price.length() == 0) {
-	      errorMsgs.add("가격을 반드시 입력해주세요.");
-	 }
-   if (seasonStr == null || seasonStr.length() == 0) {
-	      errorMsgs.add("게절을 반드시 입력해주세요.");
-	 }
- 
+}
+
 %>
 <!DOCTYPE html>
 <html>
@@ -127,10 +145,10 @@
       <div class="alert alert-success">
       <b><span class="glyphicon glyphicon-ok"></span><%out.println(session.getAttribute("userid"));%></b>님 등록해주셔서 감사합니다.   
       </div>
-      
       <div class="form-action">
-         <a href="addshow.jsp" class="btn">확인하기</a>
+         <a href="index.jsp" class="btn btn-default">홈으로 가기</a>
       </div>
+    
 
       <%}%>
    </div>
