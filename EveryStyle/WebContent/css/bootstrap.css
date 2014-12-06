@@ -4620,10 +4620,10 @@ a.badge:focus {
   margin-left: 3px;
 }
 .jumbotron {
+	background: url("css/image/banner.png") no-repeat;
   padding: 30px 15px;
   margin-bottom: 30px;
-  color: inherit;
-  background-color: #eee;
+  background: transparent;
 }
 .jumbotron h1,
 .jumbotron .h1 {

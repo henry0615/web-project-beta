@@ -24,7 +24,7 @@ div {
 #styleDiv {
 	border: 1px solid #e5e5e5;
 	width: 600px;
-	height: 400px;
+	height: auto;
 	margin:50px 40px 50px 0;
 }
 #blankDiv, #styleDiv div {border: 1px solid #e5e5e5;}
@@ -48,15 +48,18 @@ div {
 #categoryList img {width:100px; height:100px;}
 #categoryList td {
 	border: 1px solid #e5e5e5;
-	width:100px;
+	width:150px;
 	height:120px;
 	margin:0;
 	padding:0;
 }
 
-#clothImg {width:400px;}
+#clothImg {width:600px;}
 #clothImg img{
 	width:100px;
 	height:100px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
