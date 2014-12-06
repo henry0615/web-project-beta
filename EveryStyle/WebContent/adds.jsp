@@ -3,8 +3,8 @@
     import="org.apache.commons.lang3.StringUtils"%>
 
 <%
-   String[] wear_kinds = {"outer", "top", "pant", "dress & skirt"};
-   String[] wear_seasons = {"spring", "summer", "fall", "winter"};
+   String[] wear_kinds = {"Outer", "Top", "Pants", "Skirt&Dress"};
+   String[] wear_seasons = {"Spring", "Summer", "Fall", "Winter"};
    String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만원이상" };
    
    String errorMsg = null;
@@ -56,7 +56,7 @@
             if (rs.next()) {
                userid = session.getAttribute("userid").toString();
                clothesName = rs.getString("clothesName");
-               image = rs.getString("image");
+               /* image = rs.getString("image"); */
                link = rs.getString("link");
                clothes = rs.getString("clothes");
                season = rs.getString("season");
@@ -87,6 +87,7 @@
 <title>옷 등록</title>
    <link href="css/bootstrap.min.css" rel="stylesheet">
    <link href="css/base.css" rel="stylesheet">
+   <link href="css/banner.css" rel="stylesheet">
    <script src="js/jquery-1.8.2.min.js"></script>
    <script src="js/bootstrap.min.js"></script>
 </head>
@@ -94,7 +95,6 @@
 <jsp:include page="share/header.jsp">
   <jsp:param name="current" value="Add"/>
 </jsp:include>
-
  <div class="container">
  <%
  if (errorMsg != null && errorMsg.length() > 0 ) {
@@ -107,7 +107,7 @@
 	 	<h3>로그인 후 이용 가능합니다.</h3>
 	 </div>
 	 <div class="form-action">
-	 	<a href="index.jsp" class="btn">올아가기</a>
+	 	<a href="index.jsp" class="btn">돌아가기</a>
 	 </div>
 <%} else { %>
 
