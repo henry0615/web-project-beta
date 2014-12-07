@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.util.*" import="java.sql.*"
 	import="org.apache.commons.lang3.StringUtils" import="java.sql.*" import="java.io.*"
-   import="org.apache.commons.lang3.StringUtils"%>
+   %>
 <%
-String[] wear_kinds = {"outer", "top", "pant", "dress & skirt"};
+String[] wear_kinds = {"Outer", "Top", "Pants", "Skirt&Dress"};
+String[] wear_seasons = {"Spring", "Summer", "Fall", "Winter"};
 String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만원이상" };
  
+
    String errorMsg = null;
 
   String actionUrl;
@@ -20,13 +22,15 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
   
   // 사용자 정보를 위한 변수 초기화
   String userid = "";
-  String dbuserid = "";
   String clothesName = "";
   String link = "";
   String clothes = "";
   String season = "";
   String price = "";
 	String imgpath = "";
+	String Admin = "admin";
+	 
+
   // Request로 ID가 있는지 확인
   int id = 0;
   try {
@@ -39,7 +43,7 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
       // DB 접속
       conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
       // 질의 준비
-      stmt = conn.prepareStatement("SELECT userid, clothesName, link, clothes, price, season, path FROM adds WHERE id = ?");
+      stmt = conn.prepareStatement("SELECT * FROM adds WHERE id = ?");
       stmt.setInt(1, id);
       
       // 수행
@@ -53,10 +57,11 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
     	  price = rs.getString("price");
     	  season = rs.getString("season");
     	  imgpath = rs.getString("path");
-          
+    	  
+    	 
       }
     }catch (SQLException e) {
-       errorMsg = "SQL 에러: " + e.getMessage();
+     /*  errorMsg = "SQL 에러: " + e.getMessage(); */
     } finally {
       // 무슨 일이 있어도 리소스를 제대로 종료
       if (rs != null) try{rs.close();} catch(SQLException e) {}
@@ -72,22 +77,21 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
 <meta charset="UTF-8">
 <title>옷 정보</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/banner.css" rel="stylesheet">
 <link href="css/base.css" rel="stylesheet">
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-   
+ 
    <div class="container">
       <%
          if (errorMsg != null && errorMsg.length() > 0 ) {
                 // SQL 에러의 경우 에러 메시지 출력
                 out.print("<div class='alert'>" + errorMsg + "</div>");
-         } else {
+             } else {
       %>
       <div class="row">
-  		<div class="col-sm-6 col-md-3">
+  		<div class="col-sm-offset-3 col-md-3">
   		<img src="<%=imgpath %>" class="img-thumbnail" alt="picture"/>
   		</div>
   		</div>
@@ -97,50 +101,51 @@ String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만�
          <ul>
             <li>User ID: <%=userid%></li>
             
-            <li>Link: <%=link%></li>
             <li>Clothes: <%
                for (String arr: wear_kinds) {
-            	   if (arr.equals(clothes)) {
-            		   out.println(arr);
-                 }
-               }
+                               if (arr.equals(clothes)) {
+                                  out.println(arr);
+                               }
+                            }
             %>
             </li>
             <li>Price: <%
                for (String arr: wear_prices) {
-            	   if (arr.equals(price)) {
-            		   out.println(arr);
-                 }
-               }
+                               if (arr.equals(price)) {
+                                  out.println(arr);
+                               }
+                            }
             %>
             </li>
             <li>Season: <%=season%></li>
+             <li> <a href="<%=link%>" target="_blank">구매 사이트 </a></li>
             
          </ul>
       </div>
+      <%
+         }
+      %>
 
       <div class="form-actions">
-         <a href="search.jsp" class="btn">목록으로</a>
-        <%if (id > 0) { 
-        	if(session.getAttribute("userid") != null) {
-          	if(userid.equals(session.getAttribute("userid").toString())){ %>
+          <a onclick="history.back();" class=" btn btn-default">목록으로</a>
+         
+         <%if (id > 0) { 
+        	 if(session.getAttribute("userid") != null){
+        	 	if(userid.equals(session.getAttribute("userid").toString()) || Admin.equals(session.getAttribute("userid").toString()) ){%>
          			<a href="adds.jsp?id=<%=id%>" class="btn btn-primary">수정</a>
         		 	<a href="#" class="btn btn-danger" data-action="delete" data-id="<%=id%>">삭제</a>
         		 <% } %>
-        	<% } %>
-        	<%} %>
+        		<% } %>
+          <% } %>
       </div>
       <script>
          $("a[data-action='delete']").click(function() {
-            if (confirm("정말로 삭제하시겠습니까?")) {
+            if (confirm("옷 정보를 삭제하시겠습니까?")) {
                location = 'adddelete.jsp?id=' + $(this).attr('data-id');
             }
             return false;
          });
       </script>
-       <%
-         }
-      %>
    </div>
 </body>
 </html>

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 String currentMenu = request.getParameter("current");
+String Admin = "admin";
 %>  
 	<div class="container navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -16,6 +17,9 @@ String currentMenu = request.getParameter("current");
 					<%} else {%>
 					<li><a class= "menu" href= "index.jsp"><%out.println(session.getAttribute("userid"));%>님</a></li>
 					<li><a class= "menu" href= "logout.jsp">로그아웃</a><li>
+					<%if(Admin.equals(session.getAttribute("userid").toString())){ %>
+					<li><a href="userList.jsp"  data-toggle="tab">회원관리</a></li>
+					<%} %>
 					<%} %>
           </ul>
         </div>
@@ -36,5 +40,3 @@ String currentMenu = request.getParameter("current");
 		<li><a href="create.jsp" data-toggle="tab">Create</a></li>
 		</ul>
  	</div>  
- 	
- 
