@@ -7,7 +7,48 @@
 <%@ page import="org.apache.commons.fileupload.disk.*"%>
 <%@ page import="org.apache.commons.fileupload.servlet.*"%>
     <%
+    class Cody {
+    	public int id;
+    	public int outerId;
+    	public String outerPath;
+    	public int topId;
+    	public String topPath;
+    	public int pantsId;
+    	public String pantsPath;
+    	public int skirtDressId;
+    	public String skirtDressPath;
     	
+    	public int outerLeft;
+    	public int outerTop;
+    	public int topLeft;
+    	public int topTop;
+    	public int pantsLeft;
+    	public int pantsTop;
+    	public int skirtDressTop;
+    	public int skirtDressLeft;
+    	
+    	public Cody (int id, int outerId, String outerPath, int topId, String topPath, int pantsId, String pantsPath, int skirtDressId, String skirtDressPath, int outerLeft, int outerTop, int topLeft, int topTop, int pantsLeft, int pantsTop, int skirtDressLeft, int skirtDressTop) {
+    		this.id = id;
+    		this.outerId = outerId;
+    		this.topId = topId;
+    		this.pantsId = pantsId;
+    		this.skirtDressId = skirtDressId;
+    		this.outerPath = outerPath;
+    		this.topPath = topPath;
+    		this.pantsPath = pantsPath;
+    		this.skirtDressPath = skirtDressPath;
+    		this.outerLeft = outerLeft;
+    		this.outerTop = outerTop;
+    		this.topLeft = topLeft;
+    		this.topTop = topTop;
+    		this.pantsLeft = pantsLeft;
+    		this.pantsTop = pantsTop;
+    		this.skirtDressLeft = skirtDressLeft;
+    		this.skirtDressTop = skirtDressTop;
+    	}
+    }
+    
+    
     	String errorMsg = null;
 
     	String actionUrl = null;
@@ -21,7 +62,7 @@
     	String dbPassword = "asdf";
     	
     	// 의류 정보를위한 변수 초기화
-    	Vector<Integer> idList = new Vector<Integer>();
+    	/*Vector<Integer> idList = new Vector<Integer>();
     	Vector<String> userid = new Vector<String>();
     	Vector<String> outer_left = new Vector<String>();
     	Vector<String> outer_top = new Vector<String>();
@@ -35,7 +76,8 @@
     	Vector<String> skirtdress_left = new Vector<String>();
     	Vector<String> skirtdress_top = new Vector<String>();
     	Vector<String> skirtdress_id = new Vector<String>();
-    	Vector<String> created_at = new Vector<String>();
+    	Vector<String> created_at = new Vector<String>();*/
+    	ArrayList<Cody> codyList = new ArrayList<Cody>();
     	
     	//List<String> favoriteList = null;
     	
@@ -51,13 +93,63 @@
     			conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
     	 		// 질의 준비
-    			stmt = conn.prepareStatement("SELECT id, userid, outer_left, outer_top, outer_id, top_left, top_top, top_id, pants_left, pants_top, pants_id, skirtdress_left, skirtdress_top, skirtdress_id, created_at, path FROM cody, adds WHERE cody.id=adds.id ORDER BY created_at DESC");
+    			//stmt = conn.prepareStatement("select a.id, b.id, b.path, c.id, c.path, d.id, d.path, e.id, e.path from cody a,(select distinct a.id, b.id, b.path from cody a, adds b where a.id=? and a.outer_id=b.id ) b, (select distinct a.id, b.id, b.path from cody a, adds b where a.id=? and a.top_id=b.id) c, (select distinct a.id, b.id, b.path from cody a, adds b where a.id=? and a.pants_id=b.id) d, (select distinct a.id, b.id, b.path from cody a, adds b where a.id=? and a.skirtdress_id=b.id) e where a.id = ? and a.id=b.id and a.id=c.id and a.id=d.id and a.id=e.id; ORDER BY created_at DESC");
+    	 		stmt = conn.prepareStatement("select id, outer_id, outer_top, outer_left, top_id, top_left, top_top, pants_id, pants_left, pants_top, skirtdress_id, skirtdress_left, skirtdress_top from cody order by id desc");
     			//stmt.setInt(1, id);
     			
     			// 수행
     	 		rs = stmt.executeQuery();
-    			
     			while (rs.next()) {
+    				int mainId = rs.getInt("id");
+    				int outerId = rs.getInt("outer_id");
+    				int topId = rs.getInt("top_id");
+    				int pantsId = rs.getInt("pants_id");
+    				int skirtDressId = rs.getInt("skirtdress_id");
+    				String outerPath = null;
+    				String topPath = null;
+    				String pantsPath = null;
+    				String skirtDressPath = null;
+    				int outerTop = rs.getInt("outer_top");
+    				int outerLeft = rs.getInt("outer_left");
+    				int topTop = rs.getInt("top_top");
+    				int topLeft = rs.getInt("top_left");
+    				int pantsTop = rs.getInt("pants_top");
+    				int pantsLeft = rs.getInt("pants_left");
+    				int skirtDressTop = rs.getInt("skirtdress_top");
+    				int skirtDressLeft = rs.getInt("skirtdress_left");
+    				
+    				PreparedStatement tempStmt = conn.prepareStatement("SELECT path FROM adds WHERE id=?");
+    				tempStmt.setInt(1, outerId);
+    				ResultSet tempRS = tempStmt.executeQuery();
+    				if (tempRS.next()) outerPath = tempRS.getString("path");
+    				tempRS.close();
+    				tempStmt.close();
+    				
+    				tempStmt = conn.prepareStatement("SELECT path FROM adds WHERE id=?");
+    				tempStmt.setInt(1, topId);
+    				tempRS = tempStmt.executeQuery();
+    				if (tempRS.next()) topPath = tempRS.getString("path");
+    				tempRS.close();
+    				tempStmt.close();
+    				
+    				tempStmt = conn.prepareStatement("SELECT path FROM adds WHERE id=?");
+    				tempStmt.setInt(1, pantsId);
+    				tempRS = tempStmt.executeQuery();
+    				if (tempRS.next()) pantsPath = tempRS.getString("path");
+    				tempRS.close();
+    				tempStmt.close();
+    				
+    				tempStmt = conn.prepareStatement("SELECT path FROM adds WHERE id=?");
+    				tempStmt.setInt(1, skirtDressId);
+    				tempRS = tempStmt.executeQuery();
+    				if (tempRS.next()) skirtDressPath = tempRS.getString("path");
+    				tempRS.close();
+    				tempStmt.close();
+    				
+    				codyList.add(new Cody(mainId, outerId, outerPath, topId, topPath, pantsId, pantsPath, skirtDressId, skirtDressPath, outerLeft, outerTop, topLeft, topTop, pantsLeft, pantsTop, skirtDressLeft, skirtDressTop));
+    			}
+    			
+    			/*while (rs.next()) {
     				idList.add(rs.getInt("id"));
     				userid.add(rs.getString("userid"));
     				outer_left.add(rs.getString("outer_left"));
@@ -73,7 +165,7 @@
     				skirtdress_top.add(rs.getString("skirtdress_top"));
     				skirtdress_id.add(rs.getString("skirtdress_id"));
     				created_at.add(rs.getString("created_at"));
-    			}
+    			}*/
     		}catch (SQLException e) {
     			errorMsg = "SQL 에러: " + e.getMessage();
     		} finally {
@@ -84,7 +176,7 @@
     		}
     		actionUrl = "searchResult.jsp";
     %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -94,7 +186,9 @@
 	<link href="css/base.css" rel="stylesheet">
 	<script src="js/jquery-1.8.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script type="text/javascript">
+	<script type="text/javascript" src="./js/excanvas.js"></script>
+	<script type="text/javascript" src="./js/fabric.js"></script>
+	<!-- <script type="text/javascript">
 	// create a wrapper around native canvas element (with id="c")
 	$(document).ready(function () {
 
@@ -103,23 +197,57 @@
 				canvas.setHeight(300);
 				canvas.setWidth(300);
 				
-				var img
 	});
+	</script> -->
+	<script type="text/javascript">
+	var canvas = new Array(<%=codyList.size()%>)
+	var context = new Array(<%=codyList.size()%>);
+	var image = new Array(<%=codyList.size()%>);
+	var image2 = new Array(<%=codyList.size()%>);
+	var image3 = new Array(<%=codyList.size()%>);
+	var image4 = new Array(<%=codyList.size()%>);
 	</script>
-				
 </head>
 <body>
-<jsp:include page="share/header.jsp">
-  	<jsp:param name="current" value="Coordination"/>
-  </jsp:include>
   <div class="container">
-<div class="row">
- <% for(int i=0; i<idList.size(); i++ ) {%>
-	  		<div class="col-sm-6 col-md-3">
-	  		<%out.println(idList.get(i));%>
-	  		<%-- <img src="<%=idList.get(i) %>" class="img-thumbnail" alt="picture"/> --%>
-	  		</div>
-	  	<%} %>
+  <div class="row">
+  
+ <%
+	 	for (int i = 0;i < codyList.size();++i) {
+	 		%>
+	 		<div class="col-sm-6 col-md-3">
+	 			<a href="asd.jsp?id="><canvas width="250" height="300" id="<%=codyList.get(i).id%>" style="border:1px solid #e5e5e5;"></canvas></a>
+	 			<script type="text/javascript">
+		 			canvas[<%=i%>] = document.getElementById("<%=codyList.get(i).id%>");
+		 			context[<%=i%>] = canvas[<%=i%>].getContext("2d");
+		 			image[<%=i%>] = new Image();
+		 			image[<%=i%>].onload = function (){
+		 				context[<%=i%>].drawImage(image[<%=i%>], <%=codyList.get(i).outerLeft%>, <%=codyList.get(i).outerTop%>, 100, 100);
+		 			}
+		 			image[<%=i%>].src = "<%=codyList.get(i).outerPath%>";
+		 			////////////////////
+		 			image2[<%=i%>] = new Image();
+		 			image2[<%=i%>].onload = function (){
+		 				context[<%=i%>].drawImage(image2[<%=i%>], <%=codyList.get(i).topLeft%>, <%=codyList.get(i).topTop%>, 100, 100);
+		 			}
+		 			image2[<%=i%>].src = "<%=codyList.get(i).topPath%>";
+		 			///////////////////////
+		 			image3[<%=i%>] = new Image();
+		 			image3[<%=i%>].onload = function (){
+		 				context[<%=i%>].drawImage(image3[<%=i%>], <%=codyList.get(i).pantsLeft%>, <%=codyList.get(i).pantsTop%>, 100, 100);
+		 			}
+		 			image3[<%=i%>].src = "<%=codyList.get(i).pantsPath%>";
+		 			///////////////////////
+		 			image4[<%=i%>] = new Image();
+		 			image4[<%=i%>].onload = function (){
+		 				context[<%=i%>].drawImage(image4[<%=i%>], <%=codyList.get(i).skirtDressLeft%>, <%=codyList.get(i).skirtDressTop%>, 100, 100);
+		 			}
+		 			image4[<%=i%>].src = "<%=codyList.get(i).skirtDressPath%>";
+	 			</script>
+	 		</div>
+	 		<%
+	 	}
+	 %>
   <div class="col-sm-6 col-md-3">
     <div class="thumbnail">
       <img data-src="holder.js/300x200" alt="...">
@@ -130,6 +258,7 @@
       </div>
     </div>
   </div>
+  
 </div>
 </div>
 </body>

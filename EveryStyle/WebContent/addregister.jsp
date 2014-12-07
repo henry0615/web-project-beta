@@ -18,18 +18,20 @@
    String dbPassword = "asdf";
    List<String> errorMsgs = new ArrayList<String>();
    int result = 0;
-   String path = "C:/Users/lg/Desktop/web/web-project-beta/EveryStyle/WebContent/uploadImg/";
-   MultipartRequest multi = new MultipartRequest(request, path, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
+   String root = request.getSession().getServletContext().getRealPath("") + "/uploadImg/";
+   out.println(root);
+   String path = "D:/eclipse-jee-luna-SR1-win32/eclipse/workspace/EveryStyle/WebContent/uploadImg/";
+   
+   MultipartRequest multi = new MultipartRequest(request, root, 1024*1024*5, "utf-8", new DefaultFileRenamePolicy());
    File file = multi.getFile("image");
    String fileName = multi.getOriginalFileName("image");
    
    //날짜+시간 저장
-    java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
     String today = formatter.format(new java.util.Date());
    
-   String userid = session.getAttribute("userid").toString();
+		String userid = session.getAttribute("userid").toString();
    //파일명 변경하여 업로드
-    
    
    String realFileName = userid + fileName;  //사용자 아이디와 파일이름 합치기
   
@@ -39,17 +41,20 @@
    String price = multi.getParameter("price");
    String[] season = multi.getParameterValues("season");
    String seasonStr = StringUtils.join(season, ",");
-   String imgpath = "./uploadImg/" + realFileName;
+   String imgpath = "./EveryStyle/uploadImg/" + realFileName;
    String created_at = today;
-FileInputStream fileInputStream = null;
+	 FileInputStream fileInputStream = null;
    
-if (file != null) {
- File NewFile = new File(path + realFileName);
-   file.renameTo(NewFile);
-
- File saveFile = new File(path + realFileName);
-    fileInputStream = new FileInputStream(saveFile);
-   }
+		if (file != null) {
+		 File NewFile = new File(root + realFileName);
+		 //File NewFile = new File("./uploadImg/" + realFileName);
+		 out.println(NewFile.getName());
+		 file.renameTo(NewFile);
+		
+		 File saveFile = new File(root + realFileName);
+		 //File saveFile = new File("./uploadImg/" + realFileName);
+		    fileInputStream = new FileInputStream(saveFile);
+		}
    
    
    if (clothesName == null || clothesName.trim().length() == 0) {
@@ -78,7 +83,7 @@ if(!errorMsgs.isEmpty()){
     fileInputStream.close();
 
 
-   File deleteFile = new File(path + realFileName);
+   File deleteFile = new File(root + realFileName);
    deleteFile.delete();
 }
 } else {

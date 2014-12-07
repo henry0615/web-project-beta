@@ -47,8 +47,8 @@
 
 				var imageArr = new Array();
 				var canvas = new fabric.Canvas('c');
-				canvas.setHeight(300);
-				canvas.setWidth(300);
+				canvas.setHeight(400);
+				canvas.setWidth(400);
 				
 				
 				$("#reload").click(function () {
@@ -106,11 +106,11 @@
 	            	 alert("옷을 코디해주세요.");
 	            }
 	      });
+
 				$(".category").click(function () {
 					var category = $(this).attr("id");
 					$("#clothImg").find("img").remove();
 					$("#clothImg").attr("class", category);
-					
 					$.ajax({
 						type:"POST",
 						url:"./createSystem.jsp",
@@ -131,9 +131,10 @@
 							alert(request + "\n" + status + "\n" + error);
 						}
 					});
+
 				});
 			});
-			
+			var handleDragEnter, handleDragOver, handleDragLeave, handleDrop;
 			function imageProcessingInit(imageArr,canvas,canvasDivID,imageforDD){
 				// Bind the event listeners for the image elements
 			    var images = document.querySelectorAll(imageforDD + ' img');
@@ -153,11 +154,18 @@
 			    });
 			    // Bind the event listeners for the canvas
 			    var canvasContainer = document.getElementById(canvasDivID);
-			    canvasContainer.addEventListener('dragenter', function handleDragEnter(e) {
+			    
+			    //detach all eventlistenr from div
+			    canvasContainer.removeEventListener('dragenter', handleDragEnter);
+			    canvasContainer.removeEventListener('dragover', handleDragOver);
+			    canvasContainer.removeEventListener('dragleave', handleDragLeave);
+			    canvasContainer.removeEventListener('drop', handleDrop);
+
+			    handleDragEnter = function (e) {
 				    // this / e.target is the current hover target.
 				    this.classList.add('over');
-				}, false);
-			    canvasContainer.addEventListener('dragover', function handleDragOver(e) {
+				};
+				handleDragOver = function (e) {
 				    if (e.preventDefault) {
 				        e.preventDefault(); // Necessary. Allows us to drop.
 				    }
@@ -166,11 +174,12 @@
 				    // NOTE: comment above refers to the article (see top) -natchiketa
 				
 				    return false;
-				}, false);
-			    canvasContainer.addEventListener('dragleave', function handleDragLeave(e) {
+				};
+				handleDragLeave = function (e) {
 				    this.classList.remove('over'); // this / e.target is previous target element.
-				}, false);
-			    canvasContainer.addEventListener('drop', function handleDrop(e) {    
+				};
+				
+				handleDrop = function (e) {    
 			        // this / e.target is current target element.
 
 			        /*
@@ -196,8 +205,13 @@
 			            canvas.add(newImage); 
 
 			        return false;
-			    }, false);
-				
+			    };
+			    
+			    //attach new div event
+			    canvasEnterEvt = canvasContainer.addEventListener('dragenter', handleDragEnter, false);
+			    canvasOverEvt = canvasContainer.addEventListener('dragover', handleDragOver, false);
+			    canvasLeaveEvt = canvasContainer.addEventListener('dragleave', handleDragLeave, false);
+			    canvasdropEvt = canvasContainer.addEventListener('drop', handleDrop, false);
 			}
 		</script>
 </head>
@@ -206,6 +220,8 @@
 		<jsp:param name="current" value="create"/>
 	</jsp:include> 
 	<div class="container">
+	<input type="button" class="col-sm-offset-2 btn btn-default" value="원위치" id="reload">
+	<input type="submit" class="btn btn-success" value="저장" id="save">
 			<div id="blankDiv">
 				<h2>스타일링</h2>
 				<div id="canvas-container">
@@ -240,7 +256,6 @@
 				</table> -->
 			</div>
 			
-			
 			<div id="styleDiv">
 				<h2>선택할 옷</h2>
 				<div class="table-responsive">
@@ -266,12 +281,10 @@
 				</table>
 				</div>
 				
-				<div id="clothImg" ondrop="drop(this, event);" ondragenter="return false;" ondragover="return false;"></div>
+				<div id="clothImg"></div>
 				
 			</div>
-			<input type="button" action="createSave.jsp" value="원위치" id="reload">
-			<input type="submit" value="저장" id="save">
-	
+			
 	</div>
 </body>
 </html>
