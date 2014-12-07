@@ -1,0 +1,16 @@
+use signup;
+
+CREATE TABLE adds (
+	id INT AUTO_INCREMENT PRIMARY KEY,  
+	userid VARCHAR(100) NOT NULL,
+	clothesName VARCHAR(200) NOT NULL,
+	image MEDIUMBLOB NOT NULL,
+	link VARCHAR(255) NOT NULL,
+	clothes CHAR(100) NOT NULL, 
+	price VARCHAR(200) NOT NULL,
+	season VARCHAR(200) NOT NULL,
+	path  VARCHAR(100) NOT NULL,
+	created_at VARCHAR(100) NOT NULL
+
+);
+
