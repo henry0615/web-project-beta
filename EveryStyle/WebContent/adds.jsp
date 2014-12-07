@@ -3,12 +3,11 @@
     import="org.apache.commons.lang3.StringUtils"%>
 
 <%
-   String[] wear_kinds = {"Outer", "Top", "Pants", "Skirt&Dress"};
-   String[] wear_seasons = {"Spring", "Summer", "Fall", "Winter"};
-   String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만원이상" };
+String[] wear_kinds = {"Outer", "Top", "Pants", "Skirt&Dress"};
+String[] wear_seasons = {"Spring", "Summer", "Fall", "Winter"};
+String[] wear_prices= {"1~2만원", "2~3만원", "3~4만원", "4~5만원","5만원이상" };
    
    String errorMsg = null;
-
    String actionUrl;
    // DB 접속을 위한 준비
    Connection conn = null;
@@ -27,7 +26,6 @@
    String clothes = "";
    String season = "";
    String price = "";
-   
    List<String> seasonList = null;
    List<String> priceList = null;
    
@@ -36,16 +34,13 @@
       try {
          id = Integer.parseInt(request.getParameter("id"));
       } catch (Exception e) {}
-
       if (id > 0) {
          // Request에 id가 있으면 update모드라 가정
          actionUrl = "addupdate.jsp";
          try {
              Class.forName("com.mysql.jdbc.Driver");
-
              // DB 접속
             conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-
              // 질의 준비
             stmt = conn.prepareStatement("SELECT * FROM adds WHERE id = ?");
             stmt.setInt(1, id);
@@ -65,8 +60,9 @@
                if (season != null && season.length() > 0) {
                   seasonList = Arrays.asList(StringUtils.split(season, ","));
                }
+              
             }
-            
+           
          }catch (SQLException e) {
             errorMsg = "SQL 에러: " + e.getMessage();
          } finally {
@@ -87,7 +83,6 @@
 <title>옷 등록</title>
    <link href="css/bootstrap.min.css" rel="stylesheet">
    <link href="css/base.css" rel="stylesheet">
-   <link href="css/banner.css" rel="stylesheet">
    <script src="js/jquery-1.8.2.min.js"></script>
    <script src="js/bootstrap.min.js"></script>
 </head>
@@ -95,6 +90,7 @@
 <jsp:include page="share/header.jsp">
   <jsp:param name="current" value="Add"/>
 </jsp:include>
+
  <div class="container">
  <%
  if (errorMsg != null && errorMsg.length() > 0 ) {
@@ -107,7 +103,8 @@
 	 	<h3>로그인 후 이용 가능합니다.</h3>
 	 </div>
 	 <div class="form-action">
-	 	<a href="index.jsp" class="btn">돌아가기</a>
+	 	<a href="index.jsp" class="btn">홈으로 돌아가기</a>
+	 	<a href="loginForm.jsp" class="btn">로그인하기</a>
 	 </div>
 <%} else { %>
 
@@ -119,6 +116,8 @@
          out.println("<input type='hidden' name='id' value='"+id+"'>");
       }
       %>
+      <div class="row">
+      <div class="col-lg-4">
     <div class="control-group">
        <label class="control-label" for="userid">ID</label>
        <div class="controls">
@@ -130,6 +129,7 @@
        <label class="control-label" for="clothesName">ClothesName</label>
        <div class="controls">
           <input type="text"  name="clothesName" value="<%=clothesName%>">
+       		 <small><p class="help-block">*등록할 옷 이름을 입력해 주세요</p></small>
        </div>
     </div>
     
@@ -137,6 +137,7 @@
        <label class="control-label" for="image">Image</label>
        <div class="controls">
           <input type="file"  name="image" value="<%=image%>">
+          <small><p class="help-block">*등록할 옷 이미지를 올려주세요</p></small>
        </div>
     </div>
 
@@ -144,72 +145,73 @@
        <label class="control-label" for="link">Link</label>
        <div class="controls">
           <input type="url"  name="link" value="<%=link%>">
+          <small><p class="help-block">*구매할 수 있는 사이트를 입력해 주세요</p></small>
        </div>
     </div>
-    
+    </div>
 
 
+	<div class="col-lg-4">
     <div class="control-group">
-       <label class="control-label">Clothes</label>
-       <div class="controls">
+       <label class="col-sm-2 control-label">Clothes</label>
           <% for(String clothesOption : wear_kinds) { %> 
-             <label class="radio"> 
+             <div class="col-sm-offset-3 radio"> 
+               <label>
                <input type="radio" value="<%=clothesOption %>" name="clothes"
                <% if (clothesOption.equals(clothes)) { out.print("checked");} %>
                > 
                <%=clothesOption %>
              </label>
+            </div>
           <% } %> 
        </div>
-    </div>
+       </div>
     
+    <div class="col-lg-4">
     <div class="control-group">
-       <label class="control-label">Price</label>
-       <div class="controls">
+       <label class="col-sm-2 control-label">Price</label>
           <% for(String priceOption : wear_prices) { %> 
-             <label class="radio"> 
+             <div class="col-sm-offset-3 radio"> 
+              <label>
                <input type="radio" value="<%=priceOption%>" name="price"
                <% if (priceOption.equals(clothes)) { out.print("checked");} %>
                > 
                <%=priceOption %>
              </label>
-          <% } %> 
-       </div>
+             </div>
+          <% } %>      
+    </div>
     </div>
     
  
-
+		<div class="col-lg-4">
     <div class="control-group">
-       <label class="control-label">Season</label>
-       <div class="controls">
-          <% 
-          for (String seasonOption : wear_seasons) {
-             %>
-             <label class="checkbox"> 
+       <label class="col-sm-2 control-label">Season</label>
+          <% for (String seasonOption : wear_seasons) {%>
+             <div class="col-sm-offset-3 checkbox"> 
+               <label>
                <input type="checkbox" name="season" value="<%=seasonOption%>"
-               <% 
-                  if (seasonList != null && seasonList.contains(seasonOption)) { 
+               <%  if (seasonList != null && seasonList.contains(seasonOption)) { 
                      out.print("checked");
-                    } 
-                 %>
+                    }%>
                >
                <%=seasonOption %>
              </label> 
-             <%            
-          }                  
-          %>
+             </div>
+             <% } %>
        </div>
     </div>
+     </div>
     
-    
-    
+    <div class="<col-lg-4 col-lg-offset-9">
     <div class="form-actions">
        <a href="index.jsp" class="btn">목록으로</a>
-       <% if (id <= 0) { %>
+         <% if (id <= 0) { %>
           <input type="submit" class="btn btn-primary" value="등록">
-       <% } else { %>
-          <input type="submit" class="btn btn-primary" value="수정">
-       <% } %>
+       <% } else { %> 
+          <input type="submit" class="btn btn-primary" value="수정">   
+       <%} %>
+    </div>
     </div>
  
     
